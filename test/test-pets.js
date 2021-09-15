@@ -26,7 +26,8 @@ describe("Pets", () => {
 
 	// TEST INDEX
 	it("should index ALL pets on / GET", (done) => {
-		chai.request(server)
+		chai
+			.request(server)
 			.get("/")
 			.end((err, res) => {
 				res.should.have.status(200);
@@ -37,7 +38,8 @@ describe("Pets", () => {
 
 	// TEST NEW
 	it("should display new form on /pets/new GET", (done) => {
-		chai.request(server)
+		chai
+			.request(server)
 			.get(`/pets/new`)
 			.end((err, res) => {
 				res.should.have.status(200);
@@ -48,7 +50,8 @@ describe("Pets", () => {
 
 	// TEST CREATE
 	it("should create a SINGLE pet on /pets POST", (done) => {
-		chai.request(server)
+		chai
+			.request(server)
 			.post("/pets")
 			.send(fido)
 			.end((err, res) => {
@@ -62,7 +65,8 @@ describe("Pets", () => {
 	it("should show a SINGLE pet on /pets/<id> GET", (done) => {
 		var pet = new Pet(fido);
 		pet.save((err, data) => {
-			chai.request(server)
+			chai
+				.request(server)
 				.get(`/pets/${data._id}`)
 				.end((err, res) => {
 					res.should.have.status(200);
@@ -76,7 +80,8 @@ describe("Pets", () => {
 	it("should edit a SINGLE pet on /pets/<id>/edit GET", (done) => {
 		var pet = new Pet(fido);
 		pet.save((err, data) => {
-			chai.request(server)
+			chai
+				.request(server)
 				.get(`/pets/${data._id}/edit`)
 				.end((err, res) => {
 					res.should.have.status(200);
@@ -90,7 +95,8 @@ describe("Pets", () => {
 	it("should update a SINGLE pet on /pets/<id> PUT", (done) => {
 		var pet = new Pet(fido);
 		pet.save((err, data) => {
-			chai.request(server)
+			chai
+				.request(server)
 				.put(`/pets/${data._id}?_method=PUT`)
 				.send({ name: "Spider" })
 				.end((err, res) => {
@@ -105,7 +111,8 @@ describe("Pets", () => {
 	it("should delete a SINGLE pet on /pets/<id> DELETE", (done) => {
 		var pet = new Pet(fido);
 		pet.save((err, data) => {
-			chai.request(server)
+			chai
+				.request(server)
 				.delete(`/pets/${data._id}?_method=DELETE`)
 				.end((err, res) => {
 					res.should.have.status(200);
@@ -117,11 +124,25 @@ describe("Pets", () => {
 
 	// TEST SEARCH
 	it("should search all pets by name on /search GET", (done) => {
-		chai.request(server)
+		chai
+			.request(server)
 			.get("/search?term=norman")
 			.end((err, res) => {
 				res.should.have.status(200);
 				res.should.be.html;
+				done();
+			});
+	});
+
+	it("should list ALL pets on /pets GET", function (done) {
+		chai
+			.request(server)
+			.get("/")
+			.set("content-type", "application/json")
+			.end(function (err, res) {
+				res.should.have.status(200);
+				res.should.be.json;
+				res.body.should.be.a("object");
 				done();
 			});
 	});
